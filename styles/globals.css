@@ -1,0 +1,30 @@
+:root {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+
+  height: 100vh;
+  width: 100vw;  
+  color: white;
+  background-color: #242424;
+
+}
+
+/* td,
+th {
+  border: 1px solid #dddddd;
+  text-transform: capitalize;
+  padding: 8px;
+}
+tr{
+  background-color:rgb(52 211 153)  ;
+}
+tr:nth-child(even) {
+  background-color: rgb(5 150 105);
+} */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
