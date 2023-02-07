@@ -1,6 +1,6 @@
 import { ErrorMessage, Field } from "formik";
 
-const Input = ({ type, label, name, onChange }) => {
+const Input = ({ type, label, name, onInput }) => {
   const handleEnter = (e) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -27,14 +27,15 @@ const Input = ({ type, label, name, onChange }) => {
 
     default: {
       return (
-        <div className="flex flex-col gap-1">
+        <div className="flex flex-col gap-1 w-full">
           <label className="text-emerald-400">{label}</label>
           <Field
             name={name}
             onKeyDown={handleEnter}
             type="text"
-            className="px-5 py-2 text-lg text-center border-2 border-emerald-400 bg-transparent outline-none"
+            className="w-full px-5 py-2 text-lg text-center border-2 border-emerald-400 bg-transparent outline-none"
             placeholder={label}
+            onInput={onInput}
           />
           <p className="text-sm text-red-400 font-semibold">
             <ErrorMessage name={name} />

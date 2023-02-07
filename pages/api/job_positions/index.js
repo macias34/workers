@@ -8,7 +8,21 @@ export default async function handler(req, res) {
       const jobPositions = await prisma.jobPositions.findMany();
       return res.status(200).json(jobPositions);
     }
+    case "POST": {
+      const { positionName } = req.body;
+      const minSalary = parseInt(req.body.minSalary);
+      const maxSalary = parseInt(req.body.maxSalary);
 
+      await prisma.jobPositions.create({
+        data: {
+          positionName,
+          minSalary,
+          maxSalary,
+        },
+      });
+
+      return res.status(200).json("Job position created succesfully.");
+    }
     default: {
       return res.status(404).json({ error: "Unhandled error" });
     }

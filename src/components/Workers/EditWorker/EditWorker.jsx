@@ -28,7 +28,7 @@ const EditWorker = () => {
     data: workerData,
     error: workerErr,
     isLoading: workerIsLoading,
-  } = useGetWorkerByIDQuery(id ? id : 1);
+  } = useGetWorkerByIDQuery(id ? id : 1, { refetchOnMountOrArgChange: true });
 
   if (workerErr) router.push("/workers/notFound");
 

@@ -35,3 +35,37 @@ export const workerSchema = (salary) => {
     teamID: Yup.number().positive("Oddział jest wymagany.").required(),
   });
 };
+
+export const jobPositionsSchema = () => {
+  return Yup.object().shape({
+    positionName: Yup.string()
+      .min(1, "Za krótkie nazwa etatu.")
+      .max(50, "Za długa nazwa etatu")
+      .required("Nazwa etatu jest wymagana."),
+
+    minSalary: Yup.number()
+      .typeError("Płaca minimalna musi być liczbą.")
+      .positive("Płaca minimalna nie może być ujemna.")
+      .required("Płaca minimalna jest wymagana."),
+    maxSalary: Yup.number()
+      .typeError("Płaca maksymalna musi być liczbą.")
+      .moreThan(
+        Yup.ref("minSalary"),
+        "Minimalna płaca nie może być większa od maksymalnej"
+      )
+      .required("Płaca maksymalna jest wymagana."),
+  });
+};
+
+export const teamsSchema = () => {
+  return Yup.object().shape({
+    teamName: Yup.string()
+      .min(1, "Za krótka nazwa zespołu.")
+      .max(50, "Za długa nazwa zespołu")
+      .required("Nazwa zespołu jest wymagana."),
+    address: Yup.string()
+      .min(1, "Za krótki adres.")
+      .max(50, "Za długi adres.")
+      .required("Adres jest wymagany."),
+  });
+};

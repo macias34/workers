@@ -2,16 +2,16 @@ import Link from "next/link";
 
 const Home = () => {
   return (
-    <div className="flex items-center justify-center flex-col gap-20 text-4xl">
-      <Link className="text-emerald-400" href="/workers">
-        Pracownicy
-      </Link>
-      <Link className="text-sky-400" href="/etaty">
-        Etaty
-      </Link>
-      <Link className="text-yellow-400" href="/zespoly">
-        Zespoły
-      </Link>
+    <div className="h-full flex items-center justify-center flex-col gap-10 text-3xl">
+      <span className="text-emerald-400">
+        Aplikacja do zarządzania pracownikami, etatami i zespołami.
+      </span>
+      <span className="text-emerald-400">
+        Aby przemieszczać się po aplikacji używaj nawigacji po lewo :)
+      </span>
+      <span className="font-semibold text-sky-400">
+        Maciej Radzimirski 4 Ti
+      </span>
     </div>
   );
 };

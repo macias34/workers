@@ -7,7 +7,10 @@ export const teamsApi = createApi({
     getTeams: builder.query({
       query: () => "",
     }),
+    getTeamByID: builder.query({
+      query: (id) => `/${id}`,
+    }),
   }),
 });
 
-export const { useGetTeamsQuery } = teamsApi;
+export const { useGetTeamsQuery, useGetTeamByIDQuery } = teamsApi;

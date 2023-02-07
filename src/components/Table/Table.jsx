@@ -1,13 +1,23 @@
-import { useFilters, useTable } from "react-table";
+import { useTable } from "react-table";
 
-const Table = ({ columns, data, filterInput }) => {
-  const filteredData = data.filter((worker) => {
-    const surname = worker.surname.toLowerCase();
-    const name = worker.name.toLowerCase();
+const Table = ({ columns, data, searchValue, keysToFilter }) => {
+  const filterDataToTable = () => {
+    if (searchValue.length === 0) return data;
+    const filteredData = data.filter((filtered) => {
+      if (
+        keysToFilter.some((key) =>
+          filtered[key].toLowerCase().includes(searchValue)
+        ) ||
+        keysToFilter.some((key) =>
+          searchValue.includes(filtered[key].toLowerCase())
+        )
+      )
+        return filtered;
+    });
+    return filteredData;
+  };
 
-    if (surname.includes(filterInput) || name.includes(filterInput))
-      return worker;
-  });
+  const filteredData = filterDataToTable();
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
     useTable({ columns, data: filteredData });

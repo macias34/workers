@@ -3,15 +3,15 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model JobPositions {
   jobPositionID Int    @id @default(autoincrement())
   positionName  String @db.VarChar(15)
-  minSalary     Float? @db.Float
-  maxSalary     Float? @db.Float
+  minSalary     Float? @db.Real
+  maxSalary     Float? @db.Real
   Workers       Workers[]
 }
 
@@ -37,12 +37,12 @@ model Workers {
   bossID        Int?
   isBoss        Boolean?  @default(false)
   employedSince DateTime? @db.Date
-  baseSalary    Float?    @db.Float
-  bonusSalary   Float?    @db.Float
+  baseSalary    Float?    @db.Real
+  bonusSalary   Float?    @db.Real
   teamID        Int?
-  Teams         Teams?    @relation(fields: [teamID], references: [teamID], onDelete: Restrict, onUpdate: Restrict, map: "FK_Workers_Teams")
-  JobPositions  JobPositions?    @relation(fields: [jobPositionID], references: [jobPositionID], onDelete: Restrict, onUpdate: Restrict, map: "FK_Workers_JobPositions")
-  Bosses  Bosses?    @relation(fields: [bossID], references: [workerID], onDelete: Restrict, onUpdate: Restrict, map: "FK_Workers_Bosses")
+  Teams         Teams?    @relation(fields: [teamID], references: [teamID], onDelete: Restrict, onUpdate: Restrict)
+  JobPositions  JobPositions?    @relation(fields: [jobPositionID], references: [jobPositionID], onDelete: Restrict, onUpdate: Restrict)
+  Bosses  Bosses?    @relation(fields: [bossID], references: [workerID], onDelete: Restrict, onUpdate: Restrict)
 
   @@index([teamID], map: "FK_Workers_Teams")
   @@index([bossID], map: "FK_Workers_Bosses")

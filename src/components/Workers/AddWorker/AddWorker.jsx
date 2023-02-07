@@ -51,8 +51,8 @@ const AddWorker = () => {
   };
 
   return (
-    <div className="h-full flex flex-col items-center justify-evenly">
-      <h1 className="text-4xl  font-semibold text-emerald-400">
+    <div className="h-full flex flex-col items-center justify-center">
+      <h1 className="text-4xl mb-20 font-semibold text-emerald-400">
         Dodaj pracownika
       </h1>
       <Formik

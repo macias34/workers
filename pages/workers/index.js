@@ -10,7 +10,8 @@ import dayjs from "dayjs";
 const Workers = () => {
   const [workers, setWorkers] = useState([]);
   const [workerError, setWorkerError] = useState({ show: false, message: "" });
-  const [searchValue, setSearchValue] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+
   const columns = useMemo(() => [
     {
       Header: "id",
@@ -56,7 +57,7 @@ const Workers = () => {
     {
       Header: "Akcje",
       Cell: ({ cell }) => (
-        <div className="flex gap-5">
+        <div className="flex gap-5 justify-center">
           <Link
             className="text-sky-400"
             href={`/workers/edit/${cell.row.values.workerID}`}
@@ -95,6 +96,8 @@ const Workers = () => {
     }
   }, [data]);
 
+  const keysToFilter = ["surname", "name"];
+
   if (error) return <h1>Nie udało się pobrać pracowników</h1>;
   else if (isLoading) return <h1>Loading..</h1>;
   else if (data)
@@ -110,10 +113,17 @@ const Workers = () => {
         </div>
 
         <Search
-          onInput={(e) => setSearchValue(e.target.value)}
+          onInput={(event) =>
+            setSearchInput(event.target.value.replace(/\s/g, "").toLowerCase())
+          }
           label="Wyszukaj pracownika"
         />
-        <Table columns={columns} data={workers} filterInput={searchValue} />
+        <Table
+          columns={columns}
+          data={workers}
+          searchValue={searchInput}
+          keysToFilter={keysToFilter}
+        />
       </>
     );
 };
