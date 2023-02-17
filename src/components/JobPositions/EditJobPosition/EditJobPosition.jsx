@@ -1,73 +1,65 @@
 import Input from "../../UI/Input/Input";
-import Button from "../../UI/Button/Button";
-import { Formik, Form } from "formik";
 import { useState, useEffect } from "react";
 import { jobPositionsSchema } from "@/src/validation/formSchemas";
-import {
-  submitAddJobPosition,
-  submitEditJobPosition,
-} from "@/src/requests/jobPositionsRequests";
-import { formInitialValues } from "@/src/constants/jobPositionsConstants";
+import { submitEditJobPosition } from "@/src/requests/jobPositionsRequests";
 import { useRouter } from "next/router";
-import { useGetJobPositionByIDQuery } from "@/src/features/API_jobPositions";
+import FormikWrapper from "../../FormikWrapper/FormikWrapper";
+import { jobPositionsValues } from "@/src/constants/formInitialValues";
+import { useDispatch, useSelector } from "react-redux";
+import { editJobPosition } from "@/src/features/jobPositions/jobPositionsSlice";
+import { showNotification } from "@/src/features/notification/notificationSlice";
 
 const EditJobPosition = () => {
   const router = useRouter();
   const { id } = router.query;
+  const dispatch = useDispatch();
 
-  const [initialValues, setInitialValues] = useState(formInitialValues);
+  const [initialValues, setInitialValues] = useState(jobPositionsValues);
+  const { jobPositions } = useSelector((state) => state.jobPositions);
 
-  const {
-    data: jobPositionData,
-    error: jobPositionErr,
-    isLoading: jobPositionIsLoading,
-  } = useGetJobPositionByIDQuery(id ? id : 1, {
-    refetchOnMountOrArgChange: true,
-  });
-
-  if (jobPositionErr) router.push("/jobPositions/notFound");
-
-  const [salary, setSalary] = useState({ min: 0, max: 1000000 });
-  const AddJobPositionSchema = jobPositionsSchema(salary);
   const submitForm = async (values) => {
     await submitEditJobPosition(values, id)
       .then((res) => res.json())
       .then((data) => {
         if (data) {
+          dispatch(editJobPosition(data));
+          dispatch(
+            showNotification({
+              message: "Udało się edytować etat!",
+              type: "success",
+            })
+          );
           router.push("/jobPositions");
         }
       });
   };
 
   useEffect(() => {
-    if (jobPositionData) {
+    if (jobPositions && id) {
+      const jobPositionData = jobPositions.find(
+        (jobPosition) => jobPosition.jobPositionID == id
+      );
       setInitialValues(jobPositionData);
+
+      if (!jobPositionData) router.push("/jobPositions/notFound");
     }
-  }, [jobPositionData]);
+  }, [jobPositions]);
 
   return (
-    <div className="h-full flex flex-col items-center justify-evenly">
-      <h1 className="text-4xl  font-semibold text-emerald-400">Edytuj etat</h1>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={(values) => submitForm(values)}
-        validationSchema={AddJobPositionSchema}
-        enableReinitialize={true}
-      >
-        <Form className="flex flex-col items-center gap-10">
-          <div className="flex flex-col flex-wrap gap-5 items-center w-full">
-            <div className="flex gap-10 w-full">
-              <Input name="positionName" label="Wpisz nazwę etatu" />
-            </div>
-            <div className="flex gap-10 w-full">
-              <Input name="minSalary" label="Podaj płacę minimalną" />
-              <Input name="maxSalary" label="Podaj płacę maksymalną" />
-            </div>
-          </div>
-          <Button color="green">Edytuj etat</Button>
-        </Form>
-      </Formik>
-    </div>
+    <FormikWrapper
+      submitForm={submitForm}
+      initialValues={initialValues}
+      validationSchema={jobPositionsSchema}
+      label="Edytuj etat"
+    >
+      <div className="flex gap-10 w-full">
+        <Input name="positionName" label="Wpisz nazwę etatu" />
+      </div>
+      <div className="flex gap-10 w-full">
+        <Input name="minSalary" label="Podaj płacę minimalną" />
+        <Input name="maxSalary" label="Podaj płacę maksymalną" />
+      </div>
+    </FormikWrapper>
   );
 };
 

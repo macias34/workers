@@ -1,17 +1,16 @@
 import { removeTeams } from "../requests/teamsRequests";
 
-export const handleTeamsDelete = async (teams, setShowError, setTeams, id) => {
-  const filteredTeams = teams.filter((team) => team.teamID !== id);
+export const handleTeamsDelete = async (
+  dispatchRemoveTeam,
+  setNotification,
+  id
+) => {
   const res = await removeTeams(id).then((res) => res.json());
 
   if (res.error) {
-    setShowError({ show: true, message: res.error });
-
-    setTimeout(() => {
-      setShowError({ show: false, message: res.error });
-    }, 2000);
+    setNotification({ message: res.error, type: "error" });
     return;
   }
-
-  setTeams(filteredTeams);
+  setNotification({ message: "Udało się usunąć zespół!", type: "success" });
+  dispatchRemoveTeam(id);
 };

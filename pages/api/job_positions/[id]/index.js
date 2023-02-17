@@ -22,7 +22,7 @@ export default async function handler(req, res) {
       const minSalary = parseInt(req.body.minSalary);
       const maxSalary = parseInt(req.body.maxSalary);
 
-      await prisma.jobPositions.update({
+      const jobPositionToReturn = await prisma.jobPositions.update({
         where: {
           jobPositionID: parseInt(id),
         },
@@ -33,7 +33,7 @@ export default async function handler(req, res) {
         },
       });
 
-      return res.status(200).json("Job Position updated successfully.");
+      return res.status(200).json(jobPositionToReturn);
     }
     case "DELETE": {
       if (jobPosition.Workers.length > 0) {

@@ -20,7 +20,7 @@ export default async function handler(req, res) {
     case "PUT": {
       const { teamName, address } = req.body;
 
-      await prisma.teams.update({
+      const teamToReturn = await prisma.teams.update({
         where: {
           teamID: parseInt(id),
         },
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
         },
       });
 
-      return res.status(200).json("Team updated successfully.");
+      return res.status(200).json(teamToReturn);
     }
     case "DELETE": {
       if (team.Workers.length > 0) {

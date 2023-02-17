@@ -13,7 +13,7 @@ export default async function handler(req, res) {
       const minSalary = parseInt(req.body.minSalary);
       const maxSalary = parseInt(req.body.maxSalary);
 
-      await prisma.jobPositions.create({
+      const jobPosition = await prisma.jobPositions.create({
         data: {
           positionName,
           minSalary,
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         },
       });
 
-      return res.status(200).json("Job position created succesfully.");
+      return res.status(200).json(jobPosition);
     }
     default: {
       return res.status(404).json({ error: "Unhandled error" });

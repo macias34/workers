@@ -1,111 +1,62 @@
-import { useGetJobPositionsQuery } from "@/src/features/API_jobPositions";
 import Link from "next/link";
 import Table from "@/src/components/Table/Table";
 import Search from "@/src/components/UI/Search/Search";
-import { useState, useMemo, useEffect } from "react";
-import { handleJobPositionsDelete } from "@/src/helpers/jobPositionsHelpers";
+import { useState, useMemo } from "react";
 import ErrorAlert from "@/src/components/UI/ErrorAlert/ErrorAlert";
+import { jobPositionsColumns } from "@/src/helpers/tableHelpers";
+import { handleInput } from "@/src/helpers/searchHelpers";
+import { useDispatch, useSelector } from "react-redux";
+import { removeJobPosition } from "@/src/features/jobPositions/jobPositionsSlice";
+import Loading from "@/src/components/Loading/Loading";
+import FetchFailed from "@/src/components/FetchFailed/FetchFailed";
+import { showNotification } from "@/src/features/notification/notificationSlice";
 
 const JobPositions = () => {
+  const dispatch = useDispatch();
   const keysToFilter = ["positionName"];
-  const [jobPositions, setJobPositions] = useState([]);
-  const [jobPositionError, setJobPositionError] = useState({
-    show: false,
-    message: "",
-  });
-
   const [searchInput, setSearchInput] = useState("");
+  const { jobPositions, status } = useSelector((state) => state.jobPositions);
 
-  const columns = useMemo(() => [
-    {
-      Header: "Id",
-      accessor: "jobPositionID",
-    },
-    {
-      Header: "Nazwa etatu",
-      accessor: "positionName",
-    },
-    {
-      Header: "Płaca minimalna",
-      accessor: "minSalary",
-    },
-    {
-      Header: "Płaca maksymalna",
-      accessor: "maxSalary",
-    },
+  const setJobPositionError = ({ message, type }) => {
+    dispatch(showNotification({ message, type }));
+  };
 
-    {
-      Header: "Akcje",
-      Cell: ({ cell }) => (
-        <div className="flex gap-5 justify-center">
-          <Link
-            className="text-sky-400"
-            href={`/jobPositions/edit/${cell.row.values.jobPositionID}`}
-          >
-            Edytuj
-          </Link>
-          <span
-            className="text-red-400 cursor-pointer"
-            onClick={() =>
-              handleJobPositionsDelete(
-                jobPositions,
-                setJobPositionError,
-                setJobPositions,
-                cell.row.values.jobPositionID
-              )
-            }
-            href="/"
-          >
-            Usuń
-          </span>
-        </div>
-      ),
-    },
-  ]);
+  const dispatchRemoveJobPosition = (jobPositionID) => {
+    dispatch(removeJobPosition({ jobPositionID }));
+  };
 
-  const { data, error, isLoading } = useGetJobPositionsQuery(
-    {},
-    {
-      refetchOnMountOrArgChange: true,
-    }
+  const columns = useMemo(() =>
+    jobPositionsColumns(setJobPositionError, dispatchRemoveJobPosition)
   );
 
-  useEffect(() => {
-    if (data) {
-      setJobPositions(data);
+  switch (status) {
+    case "rejected":
+      return <FetchFailed message="Nie udało pobrać się etatów." />;
+    case "pending":
+      return <Loading message="Ładowanie etatów.." />;
+    case "fulfilled": {
+      return (
+        <>
+          <div className="flex gap-10 text-4xl pt-5 font-semibold text-emerald-400">
+            <Link className="text-sky-400" href="/jobPositions/add">
+              Dodaj etat
+            </Link>
+          </div>
+
+          <Search
+            onInput={(e) => handleInput(e, setSearchInput)}
+            label="Wyszukaj etat"
+          />
+          <Table
+            columns={columns}
+            data={jobPositions}
+            searchValue={searchInput}
+            keysToFilter={keysToFilter}
+          />
+        </>
+      );
     }
-  }, [data]);
-
-  if (error) return <h1>Nie udało się pobrać pracowników</h1>;
-  else if (isLoading) return <h1>Loading..</h1>;
-  else if (data)
-    return (
-      <>
-        <ErrorAlert error={jobPositionError}>
-          {jobPositionError.message}
-        </ErrorAlert>
-
-        <div className="flex gap-10 text-4xl pt-5 font-semibold text-emerald-400">
-          <p>Etaty</p>
-          <Link className=" text-sky-400" href="/jobPositions/add">
-            Dodaj etat
-          </Link>
-        </div>
-
-        <Search
-          onInput={(event) =>
-            setSearchInput(event.target.value.replace(/\s/g, "").toLowerCase())
-          }
-          label="Wyszukaj etat"
-        />
-        <Table
-          columns={columns}
-          data={jobPositions}
-          searchValue={searchInput}
-          keysToFilter={keysToFilter}
-        />
-      </>
-    );
+  }
 };
 
 export default JobPositions;

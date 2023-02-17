@@ -4,16 +4,36 @@ import { FaRegAddressCard } from "react-icons/fa";
 import { FiUsers } from "react-icons/fi";
 import { BiBriefcaseAlt } from "react-icons/bi";
 
-const Navbar = () => {
+const Navbar = ({ active }) => {
   return (
-    <nav className="h-full px-10 shadow-2xl shadow-emerald-400 flex flex-col justify-center gap-20 text-3xl fixed left-0">
-      <Link className="text-emerald-400" href="/workers" title="Pracownicy">
+    <nav
+      className={`h-fit w-fit px-10 py-2 rounded-b-3xl  flex justify-center gap-10 text-3xl`}
+    >
+      <Link
+        className={`text-emerald-400 transition hover:bg-[#363636] p-5 rounded-3xl ${
+          active === "workers" ? "bg-[#363636]" : ""
+        }`}
+        href="/workers"
+        title="Pracownicy"
+      >
         <FaRegAddressCard />
       </Link>
-      <Link className="text-sky-400" href="/jobPositions" title="Etaty">
+      <Link
+        className={`text-sky-400  transition hover:bg-[#363636] p-5 rounded-3xl ${
+          active === "jobPositions" ? "bg-[#363636]" : ""
+        }`}
+        href="/jobPositions"
+        title="Etaty"
+      >
         <BiBriefcaseAlt />
       </Link>
-      <Link className="text-yellow-400" href="/teams" title="Zespoły">
+      <Link
+        className={`text-yellow-400  transition hover:bg-[#363636] p-5 rounded-3xl ${
+          active === "teams" ? "bg-[#363636]" : ""
+        }`}
+        href="/teams"
+        title="Zespoły"
+      >
         <FiUsers />
       </Link>
     </nav>

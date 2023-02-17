@@ -11,14 +11,14 @@ export default async function handler(req, res) {
     case "POST": {
       const { teamName, address } = req.body;
 
-      await prisma.teams.create({
+      const team = await prisma.teams.create({
         data: {
           teamName,
           address,
         },
       });
 
-      return res.status(200).json("Team position created succesfully.");
+      return res.status(200).json(team);
     }
 
     default: {

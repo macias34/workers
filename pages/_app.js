@@ -1,29 +1,11 @@
-import "../styles/globals.css";
-import { configureStore, getDefaultMiddleware } from "@reduxjs/toolkit";
-import { jobPositionsApi } from "@/src/features/API_jobPositions";
-import { teamsApi } from "@/src/features/API_teams";
-import { workersApi } from "@/src/features/API_workers";
 import { Provider } from "react-redux";
+import { reduxStore } from "@/src/stores/reduxStore";
 import Layout from "@/src/components/Layout/Layout";
-
-export const store = configureStore({
-  reducer: {
-    [jobPositionsApi.reducerPath]: jobPositionsApi.reducer,
-    [teamsApi.reducerPath]: teamsApi.reducer,
-    [workersApi.reducerPath]: workersApi.reducer,
-  },
-  middleware: (getDefaultMiddleware) => {
-    return getDefaultMiddleware().concat([
-      jobPositionsApi.middleware,
-      teamsApi.middleware,
-      workersApi.middleware,
-    ]);
-  },
-});
+import "../styles/globals.css";
 
 const App = ({ Component, pageProps }) => {
   return (
-    <Provider store={store}>
+    <Provider store={reduxStore}>
       <Layout>
         <Component {...pageProps} />
       </Layout>

@@ -32,16 +32,6 @@ export default async function handler(req, res) {
         },
       });
 
-      if (!boss) {
-        await prisma.bosses.create({
-          data: {
-            workerID: parseInt(bossID),
-            surname,
-            name,
-          },
-        });
-      }
-
       await prisma.bosses.update({
         where: {
           workerID: parseInt(worker.workerID),
@@ -53,7 +43,7 @@ export default async function handler(req, res) {
         },
       });
 
-      await prisma.workers.update({
+      const workerToReturn = await prisma.workers.update({
         where: {
           workerID: parseInt(id),
         },
@@ -67,9 +57,14 @@ export default async function handler(req, res) {
           bonusSalary: bonusSalary ? parseInt(bonusSalary) : 0,
           teamID: parseInt(teamID),
         },
+        include: {
+          JobPositions: true,
+          Bosses: true,
+          Teams: true,
+        },
       });
 
-      return res.status(200).json("Worker updated successfully.");
+      return res.status(200).json(workerToReturn);
     }
     case "DELETE": {
       const boss = await prisma.bosses.findUnique({
@@ -92,6 +87,13 @@ export default async function handler(req, res) {
           workerID: parseInt(id),
         },
       });
+
+      await prisma.bosses.delete({
+        where: {
+          workerID: parseInt(id),
+        },
+      });
+
       return res.status(200).json("Worker removed successfully.");
     }
     default:

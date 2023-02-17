@@ -1,68 +1,61 @@
-import Input from "../../UI/Input/Input";
-import Button from "../../UI/Button/Button";
-import { Formik, Form } from "formik";
 import { useState, useEffect } from "react";
 import { teamsSchema } from "@/src/validation/formSchemas";
 import { submitEditTeams } from "@/src/requests/teamsRequests";
-import { formInitialValues } from "@/src/constants/teamsConstants";
 import { useRouter } from "next/router";
-import { useGetTeamByIDQuery } from "@/src/features/API_teams";
+import Input from "../../UI/Input/Input";
+import FormikWrapper from "../../FormikWrapper/FormikWrapper";
+import { teamsValues } from "@/src/constants/formInitialValues";
+import { useDispatch, useSelector } from "react-redux";
+import { editTeam } from "@/src/features/teams/teamsSlice";
+import { showNotification } from "@/src/features/notification/notificationSlice";
 
 const EditTeam = () => {
   const router = useRouter();
+  const dispatch = useDispatch();
   const { id } = router.query;
 
-  const [initialValues, setInitialValues] = useState(formInitialValues);
+  const [initialValues, setInitialValues] = useState(teamsValues);
 
-  const {
-    data: teamData,
-    error: teamErr,
-    isLoading: teamIsLoading,
-  } = useGetTeamByIDQuery(id ? id : 1, {
-    refetchOnMountOrArgChange: true,
-  });
+  const { teams } = useSelector((state) => state.teams);
 
-  if (teamErr) router.push("/teams/notFound");
-
-  const AddTeamSchema = teamsSchema();
   const submitForm = async (values) => {
     await submitEditTeams(values, id)
       .then((res) => res.json())
       .then((data) => {
         if (data) {
+          dispatch(editTeam(data));
           router.push("/teams");
+          dispatch(
+            showNotification({
+              message: "Udało się edytować zespół!",
+              type: "success",
+            })
+          );
         }
       });
   };
 
   useEffect(() => {
-    if (teamData) {
+    if (teams && id) {
+      const teamData = teams.find((team) => team.teamID == id);
       setInitialValues(teamData);
+
+      if (!teamData) router.push("/teams/notFound");
     }
-  }, [teamData]);
+  }, [teams]);
 
   return (
-    <div className="h-full flex flex-col items-center justify-center">
-      <h1 className="text-4xl mb-20 font-semibold text-emerald-400">
-        Edytuj zespół
-      </h1>
-      <Formik
-        initialValues={initialValues}
-        onSubmit={(values) => submitForm(values)}
-        validationSchema={AddTeamSchema}
-        enableReinitialize={true}
-      >
-        <Form className="flex flex-col items-center gap-10">
-          <div className="flex flex-col flex-wrap gap-5 items-center w-full">
-            <div className="flex gap-10 w-full">
-              <Input name="teamName" label="Podaj nazwę zespołu" />
-              <Input name="address" label="Podaj adres" />
-            </div>
-          </div>
-          <Button color="green">Edytuj zespół</Button>
-        </Form>
-      </Formik>
-    </div>
+    <FormikWrapper
+      submitForm={submitForm}
+      initialValues={initialValues}
+      validationSchema={teamsSchema}
+      label="Edytuj zespół"
+    >
+      <div className="flex gap-10 w-full">
+        <Input name="teamName" label="Podaj nazwę zespołu" />
+        <Input name="address" label="Podaj adres" />
+      </div>
+    </FormikWrapper>
   );
 };
 

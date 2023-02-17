@@ -5,13 +5,7 @@ export default async function handler(req, res) {
 
   switch (method) {
     case "GET": {
-      const workers = await prisma.workers.findMany({
-        include: {
-          JobPositions: true,
-          Bosses: true,
-          Teams: true,
-        },
-      });
+      const workers = await prisma.workers.findMany({});
       return res.status(200).json(workers);
     }
     case "POST": {
@@ -41,7 +35,7 @@ export default async function handler(req, res) {
         });
       }
 
-      await prisma.workers.create({
+      const worker = await prisma.workers.create({
         data: {
           surname,
           name,
@@ -52,9 +46,22 @@ export default async function handler(req, res) {
           bonusSalary: bonusSalary ? parseInt(bonusSalary) : 0,
           teamID: parseInt(teamID),
         },
+        include: {
+          JobPositions: true,
+          Bosses: true,
+          Teams: true,
+        },
       });
 
-      return res.status(200).json(req.body);
+      await prisma.bosses.create({
+        data: {
+          workerID: worker.workerID,
+          surname,
+          name,
+        },
+      });
+
+      return res.status(200).json(worker);
     }
     default:
       break;

@@ -9,7 +9,7 @@ datasource db {
 
 model JobPositions {
   jobPositionID Int    @id @default(autoincrement())
-  positionName  String @db.VarChar(15)
+  positionName  String @db.VarChar(255)
   minSalary     Float? @db.Real
   maxSalary     Float? @db.Real
   Workers       Workers[]
@@ -17,22 +17,22 @@ model JobPositions {
 
 model Teams {
   teamID   Int       @id @default(autoincrement())
-  teamName String?   @db.VarChar(20)
-  address  String?   @db.VarChar(20)
+  teamName String?   @db.VarChar(255)
+  address  String?   @db.VarChar(255)
   Workers  Workers[]
 }
 
 model Bosses{
   workerID   Int        @id
-  surname       String?   @db.VarChar(15)
-  name          String?   @db.VarChar(20)
+  surname       String?   @db.VarChar(255)
+  name          String?   @db.VarChar(255)
   Workers   Workers[]
 }
 
 model Workers {
   workerID      Int       @id @default(autoincrement())
-  surname       String?   @db.VarChar(15)
-  name          String?   @db.VarChar(20)
+  surname       String?   @db.VarChar(255)
+  name          String?   @db.VarChar(255)
   jobPositionID Int?
   bossID        Int?
   isBoss        Boolean?  @default(false)

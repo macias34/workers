@@ -1,131 +1,66 @@
 import Table from "@/src/components/Table/Table";
-import ErrorAlert from "@/src/components/UI/ErrorAlert/ErrorAlert";
-import { useGetWorkersQuery } from "@/src/features/API_workers";
 import Link from "next/link";
 import { useMemo, useState, useEffect } from "react";
-import { handleWorkerDelete } from "@/src/helpers/workersHelpers";
 import Search from "@/src/components/UI/Search/Search";
-import dayjs from "dayjs";
+import { workerColumns } from "@/src/helpers/tableHelpers";
+import { handleInput } from "@/src/helpers/searchHelpers";
+import { useDispatch, useSelector } from "react-redux";
+import { removeWorker } from "@/src/features/workers/workersSlice";
+import Loading from "@/src/components/Loading/Loading";
+import { removeBoss } from "@/src/features/bosses/bossesSlice";
+import FetchFailed from "@/src/components/FetchFailed/FetchFailed";
+import { showNotification } from "@/src/features/notification/notificationSlice";
+import SectionTitle from "@/src/components/SectionTitle/SectionTitle";
 
 const Workers = () => {
-  const [workers, setWorkers] = useState([]);
-  const [workerError, setWorkerError] = useState({ show: false, message: "" });
+  const dispatch = useDispatch();
+
   const [searchInput, setSearchInput] = useState("");
+  const { workers, status } = useSelector((state) => state.workers);
 
-  const columns = useMemo(() => [
-    {
-      Header: "id",
-      accessor: "workerID",
-    },
-    {
-      Header: "Nazwisko",
-      accessor: "surname",
-    },
-    {
-      Header: "Imie",
-      accessor: "name",
-    },
-    {
-      Header: "Etat",
-      accessor: "JobPositions",
-      Cell: ({ row }) => row.values.JobPositions.positionName,
-    },
-    {
-      Header: "Szef",
-      accessor: "Bosses",
-      Cell: ({ row }) =>
-        row.values.Bosses.surname + " " + row.values.Bosses.name,
-    },
-    {
-      Header: "Zatrudniony od",
-      accessor: "employedSince",
-      Cell: ({ row }) => dayjs(row.values.employedSince).format("YYYY-MM-DD"),
-    },
-    {
-      Header: "Płaca podstawowa",
-      accessor: "baseSalary",
-    },
-    {
-      Header: "Płaca dodatkowa",
-      accessor: "bonusSalary",
-    },
-    {
-      Header: "Zespół",
-      accessor: "Teams",
-      Cell: ({ row }) => row.values.Teams.teamName,
-    },
-    {
-      Header: "Akcje",
-      Cell: ({ cell }) => (
-        <div className="flex gap-5 justify-center">
-          <Link
-            className="text-sky-400"
-            href={`/workers/edit/${cell.row.values.workerID}`}
-          >
-            Edytuj
-          </Link>
-          <span
-            className="text-red-400 cursor-pointer"
-            onClick={() =>
-              handleWorkerDelete(
-                workers,
-                setWorkerError,
-                setWorkers,
-                cell.row.values.workerID
-              )
-            }
-            href="/"
-          >
-            Usuń
-          </span>
-        </div>
-      ),
-    },
-  ]);
+  const setNotification = ({ message, type }) => {
+    dispatch(showNotification({ message, type }));
+  };
 
-  const { data, error, isLoading } = useGetWorkersQuery(
-    {},
-    {
-      refetchOnMountOrArgChange: true,
-    }
+  const dispatchRemoveWorker = (workerID) => {
+    dispatch(removeWorker({ workerID }));
+    dispatch(removeBoss({ workerID }));
+  };
+
+  const columns = useMemo(() =>
+    workerColumns(setNotification, dispatchRemoveWorker)
   );
-
-  useEffect(() => {
-    if (data) {
-      setWorkers(data);
-    }
-  }, [data]);
 
   const keysToFilter = ["surname", "name"];
 
-  if (error) return <h1>Nie udało się pobrać pracowników</h1>;
-  else if (isLoading) return <h1>Loading..</h1>;
-  else if (data)
-    return (
-      <>
-        <ErrorAlert error={workerError}>{workerError.message}</ErrorAlert>
+  switch (status) {
+    case "rejected":
+      return <FetchFailed message="Nie udało się pobrać pracowników." />;
+    case "pending":
+      return <Loading message="Ładowanie pracowników.." />;
+    case "fulfilled": {
+      return (
+        <>
+          <div className="flex gap-10 text-4xl pt-5 font-semibold text-emerald-400">
+            <Link className=" text-sky-400" href="/workers/add">
+              Dodaj pracownika
+            </Link>
+          </div>
 
-        <div className="flex gap-10 text-4xl pt-5 font-semibold text-emerald-400">
-          <p>Pracownicy</p>
-          <Link className=" text-sky-400" href="/workers/add">
-            Dodaj pracownika
-          </Link>
-        </div>
-
-        <Search
-          onInput={(event) =>
-            setSearchInput(event.target.value.replace(/\s/g, "").toLowerCase())
-          }
-          label="Wyszukaj pracownika"
-        />
-        <Table
-          columns={columns}
-          data={workers}
-          searchValue={searchInput}
-          keysToFilter={keysToFilter}
-        />
-      </>
-    );
+          <Search
+            onInput={(e) => handleInput(e, setSearchInput)}
+            label="Wyszukaj pracownika"
+          />
+          <Table
+            columns={columns}
+            data={workers}
+            searchValue={searchInput}
+            keysToFilter={keysToFilter}
+          />
+        </>
+      );
+    }
+  }
 };
 
 export default Workers;

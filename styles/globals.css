@@ -12,18 +12,6 @@
 
 }
 
-/* td,
-th {
-  border: 1px solid #dddddd;
-  text-transform: capitalize;
-  padding: 8px;
-}
-tr{
-  background-color:rgb(52 211 153)  ;
-}
-tr:nth-child(even) {
-  background-color: rgb(5 150 105);
-} */
 
 @tailwind base;
 @tailwind components;
