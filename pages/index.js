@@ -5,7 +5,7 @@ const Home = () => {
         Aplikacja do zarządzania pracownikami, etatami i zespołami.
       </span>
       <span className="text-emerald-400">
-        Aby przemieszczać się po aplikacji używaj nawigacji po lewo :)
+        Aby przemieszczać się po aplikacji używaj nawigacji na górze :)
       </span>
       <span className="font-semibold text-sky-400">
         Maciej Radzimirski 4 Ti
