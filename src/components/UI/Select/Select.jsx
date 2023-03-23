@@ -1,4 +1,3 @@
-import { forwardRef } from "react";
 import { ErrorMessage, Field } from "formik";
 
 const Select = ({ options, label, name, onChange }) => {
@@ -6,7 +5,7 @@ const Select = ({ options, label, name, onChange }) => {
     <div className="flex flex-col gap-1 w-full">
       <label className="text-emerald-400">{label}</label>
       <Field
-        onInput={onChange}
+        onChange={onChange}
         name={name}
         as="select"
         className="w-full px-5 py-2 text-xl text-center bg-transparent border-2 border-emerald-400 "
