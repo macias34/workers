@@ -12,7 +12,7 @@ const JobPositions = ({ setSalary }) => {
 
   const { values } = useFormikContext();
   console.log(values);
-  const jobPositionID = values;
+  const { jobPositionID } = values;
 
   useEffect(() => {
     handleJobPostionChange(jobPositionID, jobPositions, setSalary);
