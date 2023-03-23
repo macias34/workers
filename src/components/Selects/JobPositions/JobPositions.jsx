@@ -23,7 +23,7 @@ const JobPositions = ({ setSalary }) => {
       });
       return (
         <Select
-          onChange={(e) => handleJobPostionChange(e, jobPositions, setSalary)}
+          // onChange={(e) => handleJobPostionChange(e, jobPositions, setSalary)}
           name="jobPositionID"
           options={fixedJobPositions}
           label="Wybierz etat"
