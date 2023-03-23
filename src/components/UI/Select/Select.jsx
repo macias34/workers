@@ -18,7 +18,7 @@ const Select = ({ options, label, name, onChange }) => {
               <option
                 key={index}
                 className="bg-emerald-600 text-white"
-                value={option.id}
+                value={option.id.toString()}
               >
                 {option.label}
               </option>
