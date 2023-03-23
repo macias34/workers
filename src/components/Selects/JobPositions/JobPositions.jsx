@@ -4,9 +4,19 @@ import Select from "../../UI/Select/Select";
 import { useSelector } from "react-redux";
 import Loading from "../../Loading/Loading";
 import FetchFailed from "../../FetchFailed/FetchFailed";
+import { useFormikContext } from "formik";
+import { useEffect } from "react";
 
 const JobPositions = ({ setSalary }) => {
   const { jobPositions, status } = useSelector((state) => state.jobPositions);
+
+  const { values } = useFormikContext();
+  console.log(values);
+  const jobPositionID = values;
+
+  useEffect(() => {
+    handleJobPostionChange(jobPositionID, jobPositions, setSalary);
+  }, [jobPositionID]);
 
   switch (status) {
     case "rejected":

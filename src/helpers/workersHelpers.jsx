@@ -1,8 +1,7 @@
 import { removeWorker } from "@/src/requests/workersRequests";
 import dayjs from "dayjs";
 
-export const handleJobPostionChange = (e, jobPositions, setSalary) => {
-  const jobID = e.target.value;
+export const handleJobPostionChange = (jobID, jobPositions, setSalary) => {
   if (jobPositions) {
     const currentJob = jobPositions.find(
       (jobPosition) => jobPosition.jobPositionID == jobID
