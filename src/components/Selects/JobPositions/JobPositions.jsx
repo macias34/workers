@@ -15,7 +15,7 @@ const JobPositions = ({ setSalary }) => {
   const { jobPositionID } = values;
 
   useEffect(() => {
-    if (jobPositionID !== 0) {
+    if (jobPositionID != 0) {
       handleJobPostionChange(jobPositionID, jobPositions, setSalary);
     }
   }, [jobPositionID]);
