@@ -16,7 +16,7 @@ const Input = ({ type, label, name, onInput }) => {
           <Field
             name={name}
             type="date"
-            className="w-full px-5 py-2 text-lg text-center text-white h-fit bg-transparent border-2 border-emerald-400 outline-none"
+            className="w-full px-5 py-2 flex items-center justify-center text-lg text-center text-white h-fit bg-transparent border-2 border-emerald-400 outline-none"
           />
           <p className="text-sm text-red-400 font-semibold">
             <ErrorMessage name={name} />
