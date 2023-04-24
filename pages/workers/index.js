@@ -51,13 +51,15 @@ const Workers = () => {
             onInput={(e) => handleInput(e, setSearchInput)}
             label="Wyszukaj pracownika"
           />
-          <div className=" scale-75 xl:scale-100 transform flex items-center justify-center">
-            <Table
-              columns={columns}
-              data={workers}
-              searchValue={searchInput}
-              keysToFilter={keysToFilter}
-            />
+          <div className=" ">
+            <div className="transform flex items-center justify-center">
+              <Table
+                columns={columns}
+                data={workers}
+                searchValue={searchInput}
+                keysToFilter={keysToFilter}
+              />
+            </div>
           </div>
         </>
       );

@@ -1,6 +1,6 @@
 const Home = () => {
   return (
-    <div className="h-full flex items-center justify-center flex-col gap-10 text-3xl text-center min-[320px]:max-[800px]:justify-start min-[320px]:max-[800px]:mt-20 min-[320px]:max-[800px]:text-xl">
+    <div className="h-[70vh] flex items-center justify-center flex-col gap-10 xl:text-3xl text-2xl text-center min-[320px]:max-[800px]:justify-start min-[320px]:max-[800px]:mt-20 min-[320px]:max-[800px]:text-xl">
       <span className="text-emerald-400">
         Aplikacja do zarządzania pracownikami, etatami i zespołami.
       </span>

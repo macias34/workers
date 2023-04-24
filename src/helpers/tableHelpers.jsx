@@ -59,11 +59,11 @@ export const workerColumns = (setNotification, dispatchRemoveWorker) => {
       Cell: ({ row }) => dayjs(row.values.employedSince).format("YYYY-MM-DD"),
     },
     {
-      Header: "Płaca podstawowa",
+      Header: "Płaca",
       accessor: "baseSalary",
     },
     {
-      Header: "Płaca dodatkowa",
+      Header: "bonus",
       accessor: "bonusSalary",
     },
     {

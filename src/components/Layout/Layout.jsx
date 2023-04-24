@@ -12,6 +12,7 @@ import { getBosses } from "@/src/features/bosses/bossesSlice";
 import FetchFailed from "../FetchFailed/FetchFailed";
 import Notification from "../Notification/Notification";
 import { useRouter } from "next/router";
+import { FcRotateToPortrait } from "react-icons/fc";
 
 const Layout = ({ children }) => {
   const dispatch = useDispatch();
@@ -77,13 +78,24 @@ const Layout = ({ children }) => {
   switch (fetchStatus) {
     case "fulfilled":
       return (
-        <div className="flex flex-col  items-center relative">
-          <Notification />
-          <Navbar active={activeLocation} />
-          <div className="py-10  gap-10 flex flex-col items-center">
-            {children}
+        <>
+          <div className="hidden max-[550px]:flex w-full  absolute top-1/2 -translate-x-1/2 -translate-y-1/2 left-1/2">
+            <div className="flex flex-col text-xl gap-3 w-full items-center justify-center">
+              <FcRotateToPortrait size={100} />
+              <span>Ta aplikacja działa w trybie poziomym.</span>
+              <span className=" text-emerald-500 font-semibold">
+                Proszę obróć telefon :)
+              </span>
+            </div>
           </div>
-        </div>
+          <div className="max-[500px]:hidden flex flex-col items-center relative">
+            <Notification />
+            <Navbar active={activeLocation} />
+            <div className="py-10  gap-10 flex flex-col items-center">
+              {children}
+            </div>
+          </div>
+        </>
       );
     case "pending": {
       return <Loading message="Ładowanie projektu.." />;
