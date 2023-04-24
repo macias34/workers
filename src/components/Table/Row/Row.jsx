@@ -9,7 +9,7 @@ const Row = ({ row }) => {
       {row.cells.map((cell) => {
         return (
           <td
-            className="text-center px-6 py-6 md:px-4 "
+            className="text-center xl:px-6 py-6 px-0 md:px-4 "
             {...cell.getCellProps()}
           >
             {cell.render("Cell")}

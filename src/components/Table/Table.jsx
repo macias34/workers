@@ -13,7 +13,7 @@ const Table = ({ columns, data, searchValue, keysToFilter }) => {
   return (
     <table
       {...getTableProps()}
-      className="w-2/3 text-sm text-left text-gray-500 dark:text-gray-400"
+      className="w-[80vw] text-sm text-left text-gray-500 dark:text-gray-400"
     >
       <Header headerGroups={headerGroups} />
       <tbody {...getTableBodyProps()}>

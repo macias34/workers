@@ -9,8 +9,8 @@ const FormikWrapper = ({
   label,
 }) => {
   return (
-    <div className="h-full flex flex-col items-center justify-center">
-      <h1 className="text-4xl mb-20 font-semibold text-emerald-400">{label}</h1>
+    <div className="flex xl:h-[75vh] flex-col items-center justify-center">
+      <h1 className="text-4xl mb-10 font-semibold text-emerald-400">{label}</h1>
       <Formik
         initialValues={initialValues}
         onSubmit={(values) => submitForm(values)}

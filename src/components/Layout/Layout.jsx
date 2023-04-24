@@ -77,10 +77,10 @@ const Layout = ({ children }) => {
   switch (fetchStatus) {
     case "fulfilled":
       return (
-        <div className="h-screen w-screen flex flex-col items-center relative">
+        <div className="flex flex-col  items-center relative">
           <Notification />
           <Navbar active={activeLocation} />
-          <div className="h-full w-full gap-10 flex flex-col items-center">
+          <div className="py-10  gap-10 flex flex-col items-center">
             {children}
           </div>
         </div>
